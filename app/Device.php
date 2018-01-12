@@ -11,8 +11,6 @@ class Device extends Model
     {
 
 
-
-
         $deviceID = 2031;
         $token = new Token();
 
@@ -20,7 +18,7 @@ class Device extends Model
 
 
         $auth = session()->get('AUTH');
-        //$auth = json_decode($auth);
+        $auth = json_decode($auth);
 
 
         $curl = curl_init();
@@ -32,17 +30,19 @@ class Device extends Model
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/callActiondev",
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode([
                     "operation" => "deviceControl",
-                    "deviceId" => $deviceID,
+                    "deviceId" => "{$deviceID}",
                     "actionName" => $action
                 ]
             ),
+//            CURLOPT_POSTFIELDS => "{
+//  \"operation\": \"deviceControl\",
+//  \"deviceId\": \"2031\",
+//  \"actionName\": \"{$action}\"}"
+//        ,
             CURLOPT_HTTPHEADER => array(
                 "Accept: application/json",
                 "Cache-Control: no-cache",
@@ -64,7 +64,7 @@ class Device extends Model
 
             //$r = json_encode($response);
 
-            return 'done';
+            return $response;
         }
     }
 }

@@ -34,6 +34,8 @@ class Token
             $this->accessToken = $this->credentials['accessToken'];
             $this->refreshToken = $this->credentials['refreshToken'];
             $this->expiresIn = $this->credentials['expiry_time'];
+
+            $this->authorizeUser();
         }
 
 
@@ -116,13 +118,12 @@ class Token
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/proxy/authenticate",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "{\n\t\"user_name\": \"DialogDeveloper@axiata.com\",\n\t\"password\": \"Dialog@12345\"\n}",
+            CURLOPT_POSTFIELDS => json_encode([
+                    "user_name" => $this->credentials['user_name'],
+                    "password" => $this->credentials['password']]
+            ),
             CURLOPT_HTTPHEADER => array(
                 "Accept: application/json",
                 "Cache-Control: no-cache",
@@ -138,13 +139,15 @@ class Token
         curl_close($curl);
 
         if ($err) {
-            echo "cURL Error #:" . $err;
+            return "cURL Error #:" . $err;
         } else {
 
             $response = json_encode($response);
             $data = json_decode($response);
-
+            session()->forget('AUTH');
             session()->put('AUTH', $data);
+
+            return $data;
         }
     }
 

@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/authapi', function () {
     $token = new \App\Token();
 
+
     //return \App\Credential::all();
     //$token->authorizeUser();
     //return $token->accessToken;
@@ -29,7 +30,7 @@ Route::get('/authapi', function () {
     //return \App\Credential::getCredentials();
 //    return $token->credentials;
     $auth = session()->get('AUTH');
-//    dd($token->accessToken,$auth);
+    dd($token->accessToken,$auth);
 //    dd();
 
 });
@@ -41,16 +42,16 @@ Route::get('/command/{value}', function ($value) {
     switch ($value) {
         case ('up'):
             return $device->executeAction('on');
-            return 200;
+            //return 200;
             break;
 
         case ('down'):
-            $device->executeAction('off');
+            return $device->executeAction('off');
             return 200;
             break;
 
         case ('stop'):
-            $device->executeAction('blink');
+            return $device->executeAction('blink');
 
             return 200;
             break;
