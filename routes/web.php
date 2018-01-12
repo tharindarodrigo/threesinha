@@ -42,18 +42,14 @@ Route::get('/command/{value}', function ($value) {
     switch ($value) {
         case ('up'):
             return $device->executeAction('on');
-            //return 200;
             break;
 
         case ('down'):
             return $device->executeAction('off');
-            return 200;
             break;
 
         case ('stop'):
             return $device->executeAction('blink');
-
-            return 200;
             break;
         default:
             return 404;

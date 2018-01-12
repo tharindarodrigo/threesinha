@@ -59,12 +59,12 @@ class Device extends Model
         curl_close($curl);
 
         if ($err) {
-            return "cURL Error #:" . $err;
+            return 404;
         } else {
 
             //$r = json_encode($response);
 
-            return $response;
+            return 200;
         }
     }
 }

@@ -144,7 +144,7 @@ class Token
 
             $response = json_encode($response);
             $data = json_decode($response);
-            session()->forget('AUTH');
+            //session()->forget('AUTH');
             session()->put('AUTH', $data);
 
             return $data;
