@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 class Token
 {
     public $credentials;
-    private $url;
+    public $url;
     public $accessToken;
     public $refreshToken;
     public $expiresIn;
@@ -34,8 +34,6 @@ class Token
             $this->accessToken = $this->credentials['accessToken'];
             $this->refreshToken = $this->credentials['refreshToken'];
             $this->expiresIn = $this->credentials['expiry_time'];
-
-
         }
 
 
@@ -69,7 +67,6 @@ class Token
             $accessToken = $data->access_token;
             $refreshToken = $data->refresh_token;
             $expiresIn = $data->expires_in;
-
 
             $this->storeCredentials([
                 ['credential' => 'accessToken', 'value' => $accessToken],
@@ -111,11 +108,53 @@ class Token
 
     public function authorizeUser()
     {
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/proxy/authenticate",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "{\n\t\"user_name\": \"DialogDeveloper@axiata.com\",\n\t\"password\": \"Dialog@12345\"\n}",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "Cache-Control: no-cache",
+                "Content-Type: application/json",
+                "IotMife-AccessToken: {$this->credentials['accessToken']}",
+//                "Postman-Token: d5c4a533-6dd5-4332-5598-9561d000a5f9"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+
+            $response = json_encode($response);
+            $data = json_decode($response);
+
+            session()->put('AUTH', $data);
+        }
+    }
+
+    public function authorizeUser1()
+    {
         $client = new Client();
 
-        //dd($this->credentials['refreshToken']);
+//        dd($this->credentials['accessToken']);
         try {
-            $result = $client->request('POST', $this->url . '/proxy/authenticate', [
+            $result = $client->request('POST', 'https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/proxy/authenticate', [
                 'headers' => [
 //                'IotMife-Token' => $this->credentials['mifeToken'],
                     'IotMife-AccessToken' => $this->credentials['accessToken'],
@@ -130,16 +169,17 @@ class Token
                 'verify' => false
             ]);
 
-            dd('asdasd');
+            //dd('asdasd');
 
 
-            return $data = $result->getResponse()->__toString();
+            $data = $result->getResponse()->__toString();
 
             session()->put('AUTH', $data);
 
             return true;
 
         } catch (ClientException $ex) {
+//            dd($ex);
             die(sprintf('Http error %s with code %d', $ex->getMessage(), $ex->getCode()));
         } catch (GuzzleException $exception) {
             die(sprintf('Http error %s with code %d', $exception->getMessage(), $exception->getCode()));
