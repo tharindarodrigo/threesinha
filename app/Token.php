@@ -9,55 +9,78 @@ use GuzzleHttp\Client;
 
 class Token
 {
-    private $credentials;
+    public $credentials;
     private $url;
-    private $accessToken;
-    private $refreshToken;
-    private $expiresIn;
+    public $accessToken;
+    public $refreshToken;
+    public $expiresIn;
 
 
     public function __construct()
     {
-        $this->credentials = Credential::all();
+//        return Credential::all();
+
+        $this->credentials = Credential::getCredentials();
         $this->url = 'https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev';
 
+
+//        var_dump($this->credentials);
         //dd($this->credentials->where('credential','mifeToken')->first()->value);
 
         if ($this->tokenExpired()) {
-            return $this->authorizeAPI();
+            $this->authorizeAPI();
+
         } else {
-            $this->accessToken = $this->credentials->access_token;
-            $this->refreshToken = $this->credentials->refresh_token;
-            $this->expiresIn = $this->credentials->expires_in;
+            $this->accessToken = $this->credentials['accessToken'];
+            $this->refreshToken = $this->credentials['refreshToken'];
+            $this->expiresIn = $this->credentials['expiry_time'];
+
+
         }
 
-        return Credential::all();
+
     }
 
     public function authorizeAPI()
     {
+
+//        /dd($this->credentials, $this->credentials['mifeToken'], $this->credentials['refreshToken']);
+
         try {
 
             $client = new Client();
-            $result = $client->post('https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/generate/iotmifetokenviatoken', [
+            $result = $client->request('POST', 'https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/generate/iotmifetokenviatoken', [
                 'headers' => [
-//                    'IotMife-Token' => 'Z3l6aXMzVE5ZZlViVzE0ZVFmbjI4YnZXUmZZYTpmQ2p5Z2d3bkE4WGtmUVlVdlJ1blBqTXY0cmdh',
-                    'IotMife-Token' => $this->credentials->where('credential', 'mifeToken')->first()->value,
-//                    'IotMife-RefreshToken' => 'fa072d20-9e20-339a-bd3b-3a6d4b19428e',
-                'IotMife-RefreshToken' => $this->credentials->where('credential','refreshToken')->first()->value,
-                    'Content-type' => 'application/json'
+                    'IotMife-Token' => $this->credentials['mifeToken'],
+                    'IotMife-RefreshToken' => $this->credentials['refreshToken'],
+                    'Content-type' => 'application/json',
+                    'Accept' => 'application/json',
                 ],
 
                 'verify' => false
             ]);
 
-            $tokens = json_decode($result);
+//            $result->getBody();
 
-            $this->accessToken = $tokens->access_token;
-            $this->refreshToken = $tokens->refresh_token;
-            $this->expiresIn = $tokens->expires_in;
+
+            $r = $result->getBody()->__toString();
+            $data = json_decode($r);
+
+            $accessToken = $data->access_token;
+            $refreshToken = $data->refresh_token;
+            $expiresIn = $data->expires_in;
+
+
+            $this->storeCredentials([
+                ['credential' => 'accessToken', 'value' => $accessToken],
+                ['credential' => 'refreshToken', 'value' => $refreshToken],
+                ['credential' => 'expiry_time', 'value' => $expiresIn + time()],
+            ]);
+
+            $this->authorizeUser();
 
             return true;
+
 
         } catch (ClientException $e) {
             return $e;
@@ -65,20 +88,63 @@ class Token
 
     }
 
-
+    /**
+     * @return bool
+     */
     public function tokenExpired()
     {
-        return time() > $this->credentials->where('credential', 'expiry_time')->first()->value;
+        return time() > $this->credentials['expiry_time'];
     }
 
-    public function storeCredentials($data = array())
+    /**
+     * @param $data
+     * @return bool
+     */
+    public function storeCredentials($data)
     {
-
-
-        foreach ($data as $key => $value){
-            Credential::where('credential', $key)->update([$key=>$value]);
+        foreach ($data as $info) {
+            Credential::where('credential', $info['credential'])->update(['value' => $info['value']]);
         }
 
         return true;
     }
+
+    public function authorizeUser()
+    {
+        $client = new Client();
+
+        //dd($this->credentials['refreshToken']);
+        try {
+            $result = $client->request('POST', $this->url . '/proxy/authenticate', [
+                'headers' => [
+//                'IotMife-Token' => $this->credentials['mifeToken'],
+                    'IotMife-AccessToken' => $this->credentials['accessToken'],
+                    'Content-type' => 'application/json',
+                    //'Accept' => 'application/json',
+                ],
+                'form_params' => [
+                    'user_name' => $this->credentials['user_name'],
+                    'password' => $this->credentials['password']
+                ],
+
+                'verify' => false
+            ]);
+
+            dd('asdasd');
+
+
+            return $data = $result->getResponse()->__toString();
+
+            session()->put('AUTH', $data);
+
+            return true;
+
+        } catch (ClientException $ex) {
+            die(sprintf('Http error %s with code %d', $ex->getMessage(), $ex->getCode()));
+        } catch (GuzzleException $exception) {
+            die(sprintf('Http error %s with code %d', $exception->getMessage(), $exception->getCode()));
+        }
+
+    }
+
 }

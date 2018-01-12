@@ -19,14 +19,21 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/authapi', function(){
+Route::get('/authapi', function () {
     $token = new \App\Token();
-    return $token->authorizeAPI();
+
+    return $token->authorizeUser();
+    //return $token->accessToken;
+    //return \App\Credential::all();
+    //return \App\Credential::getCredentials();
+//    return $token->credentials;
+    $auth = session()->get('AUTH');
+    dd($auth);
 
 });
 
-Route::get('/command/{value}', function($value){
-    switch ($value){
+Route::get('/command/{value}', function ($value) {
+    switch ($value) {
         case ('up'):
             return 200;
             break;
