@@ -19,7 +19,9 @@ class Device extends Model
 
         $auth = session()->get('AUTH');
         $auth = json_decode($auth);
-
+//dd($auth);
+//        session()->forget('AUTH');
+//        dd();
 
         $curl = curl_init();
 
