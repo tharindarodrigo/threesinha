@@ -36,6 +36,8 @@ Route::get('/authapi', function () {
 
 Route::get('/command/{value}', function ($value) {
     //$token = new \App\Token();
+
+    \App\Logg::insert(['logg'=>$value]);
     $device = new \App\Device();
 
     switch ($value) {
@@ -49,7 +51,7 @@ Route::get('/command/{value}', function ($value) {
             break;
         case ('stop'):
             return $device->executeAction('blink');
-            
+
             break;
         default:
             return 404;
@@ -58,3 +60,6 @@ Route::get('/command/{value}', function ($value) {
 
 Route::view('/test', 'test');
 Route::view('/reg', 'reg');
+Route::get('/logg',function() {
+    return \App\Logg::all();
+});
