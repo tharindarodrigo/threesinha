@@ -92,6 +92,7 @@ class Token
      */
     public function tokenExpired()
     {
+
         return time() > $this->credentials['expiry_time'];
     }
 

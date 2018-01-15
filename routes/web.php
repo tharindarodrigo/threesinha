@@ -29,7 +29,7 @@ Route::get('/authapi', function () {
     //return \App\Credential::getCredentials();
 //    return $token->credentials;
     $auth = session()->get('AUTH');
-//    dd($token->accessToken,$auth);
+    dd($token->accessToken,$auth);
 //    dd();
 
 });
@@ -37,7 +37,7 @@ Route::get('/authapi', function () {
 Route::get('/command/{value}', function ($value) {
     //$token = new \App\Token();
 
-    \App\Logg::insert(['logg'=>$value]);
+    \App\Logg::insert(['log'=>$value]);
     $device = new \App\Device();
 
     switch ($value) {
