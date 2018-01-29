@@ -67,7 +67,7 @@ class Device extends Model
         }
     }
 
-    public function executeAction2($code)
+    public function executeAction2($code, $frequency=null, $length=null)
     {
 
 
@@ -98,7 +98,9 @@ class Device extends Model
                     "actionName" => 'power',
                     "actionParameters" => [
                         "code" => $code,
-                        "mac" => 1902100379354041
+                        "mac" => 1902100379354041,
+                        "frequency" => 38,
+                        "length" => 68
                     ]
                 ]
             ),
