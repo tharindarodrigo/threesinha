@@ -14,12 +14,8 @@ class Device extends Model
         $deviceID = 2031;
         $token = new Token();
 
-//        $client = new Client();
-
-
         $auth = session()->get('AUTH');
-        $auth = json_decode($auth);
-
+        $authcr = json_decode($auth);
 
         $curl = curl_init();
 
@@ -43,7 +39,7 @@ class Device extends Model
                 "Cache-Control: no-cache",
                 "Content-Type: application/json",
                 "IotMife-AccessToken: {$token->credentials['accessToken']}",
-                "X-Key: {$auth->token}",
+                "X-Key: {$authcr->token}",
 //                "Postman-Token: d5c4a533-6dd5-4332-5598-9561d000a5f9"
             ),
         ));
