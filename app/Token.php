@@ -18,17 +18,17 @@ class Token
 
     public function __construct()
     {
-//        return Credential::all();
 
         $this->credentials = Credential::getCredentials();
         $this->url = 'https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev';
 
+    }
 
-//        var_dump($this->credentials);
-        //dd($this->credentials->where('credential','mifeToken')->first()->value);
-
+    public function authorize()
+    {
         if ($this->tokenExpired()) {
-            $this->authorizeAPI();
+            //dd('asdasd');
+            return $this->authorizeAPI();
 
         } else {
             $this->accessToken = $this->credentials['accessToken'];
@@ -37,14 +37,12 @@ class Token
 
             $this->authorizeUser();
         }
-
-
     }
 
     public function authorizeAPI()
     {
 
-//        /dd($this->credentials, $this->credentials['mifeToken'], $this->credentials['refreshToken']);
+        //dd($this->credentials);
 
         try {
 
@@ -65,7 +63,8 @@ class Token
 
             $r = $result->getBody()->__toString();
             $data = json_decode($r);
-
+            //return $r;
+            //dd($data);
             $accessToken = $data->access_token;
             $refreshToken = $data->refresh_token;
             $expiresIn = $data->expires_in;
@@ -82,6 +81,7 @@ class Token
 
 
         } catch (ClientException $e) {
+            //dd($e);
             return $e;
         }
 
@@ -92,7 +92,7 @@ class Token
      */
     public function tokenExpired()
     {
-
+//        dd($this->credentials);
         return time() > $this->credentials['expiry_time'];
     }
 

@@ -23,8 +23,8 @@ Route::get('/authapi', function () {
     $token = new \App\Token();
 
     //return \App\Credential::all();
-    //$token->authorizeUser();
-    //return $token->accessToken;
+    $token->authorize();
+//    dd($token);
     //return \App\Credential::all();
     //return \App\Credential::getCredentials();
 //    return $token->credentials;
@@ -57,6 +57,15 @@ Route::get('/command/{value}', function ($value) {
             return 404;
     }
 });
+
+Route::get('tv/{action}', 'IRBlasterController@sendCommand');
+
+Route::get('devices', function (){
+    $devices = new \App\Device();
+    return $devices->getAllDevices();
+});
+
+Route::view('remote', 'remote');
 
 Route::view('/test', 'test');
 Route::view('/reg', 'reg');
