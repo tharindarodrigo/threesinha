@@ -14,7 +14,7 @@ class Device extends Model
         $deviceID = 2031;
         $token = new Token();
 
-        $token->authorizeUser();
+        $token->authorize();
 
         $auth = session()->get('AUTH');
         $authcr = json_decode($auth);
