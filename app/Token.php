@@ -130,7 +130,7 @@ class Token
             return "cURL Error #:" . $err;
         } else {
 
-            $data = json_encode($response->__toStrig());
+            $data = json_encode($response->__toString());
             $data = json_decode($data);
 //
 //            var_dump($response);
