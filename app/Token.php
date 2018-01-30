@@ -39,7 +39,7 @@ class Token
         }
     }
 
-    public function authorizeAPI1()
+    public function authorizeAPI()
     {
 
         //dd($this->credentials);
@@ -87,7 +87,7 @@ class Token
 
     }
 
-    public function authorizeAPI()
+    public function authorizeAPI2()
     {
         $curl = curl_init();
 
@@ -131,8 +131,9 @@ class Token
 
             $response = json_encode($response);
             $data = json_decode($response);
-
-//            dd($data);
+//
+//            var_dump($response);
+//            var_dump($data);
             $accessToken = $data->access_token;
             $refreshToken = $data->refresh_token;
             $expiresIn = $data->expires_in;
