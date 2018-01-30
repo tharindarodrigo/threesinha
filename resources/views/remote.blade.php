@@ -259,7 +259,7 @@
             url: 'http://' + window.location.host + '/tv/' + command,
             action: 'GET',
             success: function (data) {
-                alert(data.toString());
+                //alert(data.toString());
 
             },
 

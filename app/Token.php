@@ -39,7 +39,7 @@ class Token
         }
     }
 
-    public function authorizeAPI2()
+    public function authorizeAPI()
     {
 
         //dd($this->credentials);
@@ -87,7 +87,7 @@ class Token
 
     }
 
-    public function authorizeAPI()
+    public function authorizeAPI2()
     {
         $curl = curl_init();
 
