@@ -119,6 +119,7 @@ class Token
         $response = curl_exec($curl);
         $err = curl_error($curl);
 
+        dd($response);
 
 
         curl_close($curl);
