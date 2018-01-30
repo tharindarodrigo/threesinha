@@ -55,7 +55,7 @@ class Device extends Model
             return 404;
         } else {
 
-            //$r = json_encode($response);
+            return $r = json_encode($response);
 
             return 200;
         }
