@@ -17,7 +17,7 @@ class Device extends Model
         $token->authorize();
 
         $auth = session()->get('AUTH');
-        $authcr = json_encode($auth);
+        $authcr = json_decode($auth);
         $auth= json_decode($authcr);
         dd($auth);
         $curl = curl_init();
