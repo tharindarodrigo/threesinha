@@ -12,7 +12,7 @@ class CredentialsTableSeeder extends Seeder
     public function run()
     {
         \App\Credential::insert([
-            ['credential' => 'refreshToken', 'value' => '22af0889-19c2-30a8-a632-56758a8af992'],
+            ['credential' => 'refreshToken', 'value' => '6c97a430-0ba6-342b-811c-56fb1e07f394'],
             ['credential' => 'accessToken', 'value' => '3f16a0df-8073-3cd8-adef-1ffe740646a9'],
             ['credential' => 'expiry_time', 'value' => 0],
             ['credential' => 'user_name', 'value' => 'dialogiotdeveloper@gmail.com'],
