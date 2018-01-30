@@ -131,6 +131,8 @@ class Token
 
             $response = json_encode($response);
             $data = json_decode($response);
+
+//            dd($data);
             $accessToken = $data->access_token;
             $refreshToken = $data->refresh_token;
             $expiresIn = $data->expires_in;
