@@ -39,7 +39,7 @@ class Token
         }
     }
 
-    public function authorizeAPI()
+    public function authorizeAPI1()
     {
 
         //dd($this->credentials);
@@ -85,6 +85,66 @@ class Token
             return $e;
         }
 
+    }
+
+    public function authorizeAPI()
+    {
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/generate/iotmifetokenviatoken",
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+//            CURLOPT_POSTFIELDS => json_encode([
+//                    "user_name" => $this->credentials['user_name'],
+//                    "password" => $this->credentials['password']]
+//            ),
+            CURLOPT_HTTPHEADER => array(
+//                "Accept: application/json",
+//                "Cache-Control: no-cache",
+//                "Content-Type: application/json",
+//                "IotMife-AccessToken: {$this->credentials['accessToken']}",
+                "IotMife-Token:{$this->credentials['mifeToken']}",
+                "IotMife-RefreshToken:{$this->credentials['refreshToken']}",
+                "Content-type:application/json",
+                "Accept:application/json",
+//                "Postman-Token: d5c4a533-6dd5-4332-5598-9561d000a5f9"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+
+        curl_close($curl);
+
+
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        } else {
+
+            $response = json_encode($response);
+            $data = json_decode($response);
+            $accessToken = $data->access_token;
+            $refreshToken = $data->refresh_token;
+            $expiresIn = $data->expires_in;
+
+            $this->storeCredentials([
+                ['credential' => 'accessToken', 'value' => $accessToken],
+                ['credential' => 'refreshToken', 'value' => $refreshToken],
+                ['credential' => 'expiry_time', 'value' => $expiresIn + time()],
+            ]);
+
+            $this->authorizeUser();
+
+            return true;
+        }
     }
 
     /**
