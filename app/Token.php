@@ -39,7 +39,7 @@ class Token
         }
     }
 
-    public function authorizeAPI()
+    public function authorizeAPI2()
     {
 
         //dd($this->credentials);
@@ -87,7 +87,7 @@ class Token
 
     }
 
-    public function authorizeAPI2()
+    public function authorizeAPI()
     {
         $curl = curl_init();
 
@@ -120,7 +120,7 @@ class Token
         $err = curl_error($curl);
 
         dd($response);
-
+//
 
         curl_close($curl);
 
@@ -130,8 +130,8 @@ class Token
             return "cURL Error #:" . $err;
         } else {
 
-            $response = json_encode($response);
-            $data = json_decode($response);
+            $data = json_encode($response);
+            $data = json_decode($data);
 //
 //            var_dump($response);
 //            var_dump($data);
