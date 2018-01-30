@@ -42,7 +42,7 @@ class Device extends Model
                 "Cache-Control: no-cache",
                 "Content-Type: application/json",
                 "IotMife-AccessToken: {$token->accessToken}",
-                "X-Key: {$authcr->token}",
+                "X-Key: {$authcr['token']}",
 //                "Postman-Token: d5c4a533-6dd5-4332-5598-9561d000a5f9"
             ),
         ));
