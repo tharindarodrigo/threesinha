@@ -213,7 +213,7 @@ class Token
             //session()->forget('AUTH');
             session()->put('AUTH', $data);
 
-            return $data;
+            return true;
         }
     }
 
