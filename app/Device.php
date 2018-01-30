@@ -12,12 +12,12 @@ class Device extends Model
 
 
         $deviceID = 2031;
-        $token = new Token();
+        //$token = new Token();
 
-        $token->authorize();
+//        $token->authorize();
 
-        $auth = session()->get('AUTH');
-        $authcr = json_decode($auth);
+//        $auth = session()->get('AUTH');
+        //$authcr = json_decode($auth);
 //        dd($authcr);
         $curl = curl_init();
 
