@@ -27,7 +27,7 @@
     </div>
     <div class="row">
         <div class="col-sm-2">
-            <button class="btn btn-block btn-primary" id="up">UP</button>
+            <button class="btn btn-block btn-primary" id="forward"><i class="fa fa-arrow-up"></i></button>
             {{--<input id="ex4" type="text" data-slider-min="-1" data-slider-max="1" data-slider-step="1"--}}
                    {{--data-slider-value="0" data-slider-orientation="vertical"/>--}}
         </div>
@@ -35,21 +35,21 @@
     <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-2">
-            <button class="btn btn-block btn-danger" id="stop">STOP</button>
+            <button class="btn btn-block btn-danger" id="stop">Stop</button>
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-block btn-default" id="lights">LIGHTS</button>
+            <button class="btn btn-block btn-default" id="light">LIGHTS</button>
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-block btn-primary" id="left"><</button>
+            <button class="btn btn-block btn-primary" id="left"><i class="fa fa-arrow-left"></i></button>
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-block btn-primary" id="right">></button>
+            <button class="btn btn-block btn-primary" id="right"><i class="fa fa-arrow-right"></i></button>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-2">
-            <button class="btn btn-block btn-primary" id="down">Down</button>
+            <button class="btn btn-block btn-primary" id="backward"><i class="fa fa-arrow-down"></i></button>
             {{--<input id="ex4" type="text" data-slider-min="-1" data-slider-max="1" data-slider-step="1"--}}
             {{--data-slider-value="0" data-slider-orientation="vertical"/>--}}
         </div>
