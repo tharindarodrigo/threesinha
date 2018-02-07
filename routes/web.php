@@ -34,6 +34,10 @@ Route::get('/authapi', function () {
 
 });
 
+Route::get('car', function (){
+    return view('carRemote');
+});
+
 Route::get('/command/{value}', function ($value) {
     //$token = new \App\Token();
 
@@ -72,3 +76,5 @@ Route::view('/reg', 'reg');
 Route::get('/logg',function() {
     return \App\Logg::all();
 });
+
+Route::get('car/{command}/', 'CarController@control');

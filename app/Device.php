@@ -11,7 +11,7 @@ class Device extends Model
     {
 
 
-        $deviceID = 2031;
+        $deviceID = 2247;
         $token = new Token();
 
         $token->authorize();
@@ -97,6 +97,63 @@ class Device extends Model
                         "frequency" => 38,
                         "length" => 68
                     ]
+                ]
+            ),
+
+
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "Cache-Control: no-cache",
+                "Content-Type: application/json",
+                "IotMife-AccessToken: {$token->credentials['accessToken']}",
+                "X-Key: {$auth->token}",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return $err;
+        } else {
+
+            //$r = json_encode($response);
+
+            return $response;
+        }
+    }
+
+    public function executeAction3($code, $frequency=null, $length=null)
+    {
+
+
+        $deviceID = 2187;
+        $token = new Token();
+        $token->authorize();
+
+
+//        $client = new Client();
+
+
+        $auth = session()->get('AUTH');
+        $auth = json_decode($auth);
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://iotdev.dialog.lk/axt-iot-mbil-instance0001001/apkios/axtitomblebckenddev/callActiondev",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+                    "operation" => "deviceControl",
+                    "deviceId" => "{$deviceID}",
+                    "actionName" => 'forward/backward/left/right/stop/light',
                 ]
             ),
 
